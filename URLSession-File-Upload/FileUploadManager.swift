@@ -31,7 +31,7 @@ class FileUploadManager : NSObject {
     } // convertFileData
     
     // File Upload Request
-    func uploadRequest(urlPath: String, imageData: Data?, imageDataFieldName: String, formFields: [String : String]) {
+    func uploadRequest(urlPath: String,  imageData: [Data?]?, imageDataFieldName: [String], formFields: [String : String]) {
         
         let boundary = "Boundary-\(UUID().uuidString)"
 
@@ -46,11 +46,15 @@ class FileUploadManager : NSObject {
         }
 
         if let iData = imageData {
-            httpBody.append(convertFileData(fieldName: imageDataFieldName,
-                                            fileName: "imagename.png",
-                                            mimeType: "image/png",
-                                            fileData: iData,
-                                            using: boundary))
+            for (index, item) in iData.enumerated() {
+                if let d = item {
+                    httpBody.append(convertFileData(fieldName: imageDataFieldName[index],
+                                                    fileName: "imagename-\(index).png",
+                                                    mimeType: "image/png",
+                                                    fileData: d,
+                                                    using: boundary))
+                }
+            }
         }
         
         httpBody.appendString("--\(boundary)--")
@@ -65,6 +69,17 @@ class FileUploadManager : NSObject {
             let dataString = String(NSString(data: data, encoding: String.Encoding.utf8.rawValue) ?? "")
 
             print("Print response: \(dataString)")
+            
+            // if need object map
+//            do {
+//
+//                let mDataDecode = try JSONDecoder().decode(Students.self, from: data)
+//
+//                success(mDataDecode)
+//
+//            } catch let err {
+//                print(err)
+//            }
             
         }.resume()
          

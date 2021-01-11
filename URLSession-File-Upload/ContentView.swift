@@ -37,9 +37,11 @@ struct ContentView: View {
                 
                 print("Upload Tapped")
                 
-                let a = FileUploadManager()
-                a.uploadRequest(urlPath: "http://192.168.0.104/upImage/my_upload.php", imageData: self.uiImage?.jpegData(compressionQuality: 1.0), imageDataFieldName: "upfile", formFields: ["title":"jdfa"])
+                // Multiple file upload need multiple imageData & imageDataFieldName (param)
+                // Below will upload single file
                 
+                let a = FileUploadManager()
+                a.uploadRequest(urlPath: "http://192.168.0.104/upImage/my_upload.php", imageData: [self.uiImage?.jpegData(compressionQuality: 1.0)], imageDataFieldName: ["upfile"], formFields: ["title":"jdfa"])
                 
             }) {
                 
